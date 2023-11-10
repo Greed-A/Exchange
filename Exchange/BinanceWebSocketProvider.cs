@@ -1,5 +1,4 @@
 ﻿using Binance.Net.Clients;
-using Kucoin.Net.Clients;
 
 namespace Exchange
 {
@@ -20,11 +19,6 @@ namespace Exchange
             {
                 OnPriceUpdate?.Invoke(data.Data.Price);
             });
-        }
-
-        public string GetName()
-        {
-            return "Binance";
         }
     }
 

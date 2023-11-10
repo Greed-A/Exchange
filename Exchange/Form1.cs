@@ -3,48 +3,54 @@ namespace Exchange
     public partial class Form1 : Form
     {
         private BinanceWebSocketProvider binanceWebSocketProvider;
-        //private BybitWebSocketProvider bybitWebSocketProvider;
+        private BybitWebSocketProvider bybitWebSocketProvider;
         private KucoinWebSocketProvider kucoinWebSocketProvider;
-        //private BitgetWebSocketProvider bitgetWebSocketProvider;
+        private BitgetWebSocketProvider bitgetWebSocketProvider;
 
-        private decimal currentPrice;
+        private decimal binancePrice;
+        private decimal kucoinPrice;
+        private decimal bybitPrice;
+        private decimal bitgetPrice;
 
         public Form1()
         {
             InitializeComponent();
 
-            comboBox1.Items.Add("Binance");
-            comboBox1.Items.Add("Kucoin");
-
             binanceWebSocketProvider = new BinanceWebSocketProvider();
-            //bybitWebSocketProvider = new BybitWebSocketProvider();
+            bybitWebSocketProvider = new BybitWebSocketProvider();
             kucoinWebSocketProvider = new KucoinWebSocketProvider();
-            //bitgetWebSocketProvider = new BitgetWebSocketProvider();
+            bitgetWebSocketProvider = new BitgetWebSocketProvider();
 
             binanceWebSocketProvider.OnPriceUpdate += OnBinancePriceUpdate;
-            //bybitWebSocketProvider.OnPriceUpdate += OnBybitPriceUpdate;
+            bybitWebSocketProvider.OnPriceUpdate += OnBybitPriceUpdate;
             kucoinWebSocketProvider.OnPriceUpdate += OnKucoinPriceUpdate;
-            //bitgetWebSocketProvider.OnPriceUpdate += OnBitgetPriceUpdate;
+            bitgetWebSocketProvider.OnPriceUpdate += OnBitgetPriceUpdate;
 
             StartWebSocketUpdates();
+            Updating();
         }
 
         private async void StartWebSocketUpdates()
         {
             await Task.WhenAll(
                 binanceWebSocketProvider.StartWebSocketAsync(),
-                //bybitWebSocketProvider.StartWebSocketAsync(),
-                kucoinWebSocketProvider.StartWebSocketAsync()
-                //bitgetWebSocketProvider.StartWebSocketAsync()
+                bybitWebSocketProvider.StartWebSocketAsync(),
+                kucoinWebSocketProvider.StartWebSocketAsync(),
+                bitgetWebSocketProvider.StartWebSocketAsync()
                 );
-
-            // Запустить таймер для обновления курсов каждые 5 секунд
+        }
+        private void Updating()
+        {
             var timer = new System.Windows.Forms.Timer();
             timer.Tick += async (sender, e) =>
             {
                 await RefreshPrices();
+                label2.Text = $"Kucoin: {kucoinPrice}";
+                label3.Text = $"Binance: {binancePrice}";
+                label1.Text = $"Bybit: {bybitPrice}";
+                label4.Text = $"Bitget: {bitgetPrice}";
             };
-            timer.Interval = 0;
+            timer.Interval = 5000;
             timer.Start();
         }
 
@@ -52,26 +58,30 @@ namespace Exchange
         {
             await Task.WhenAll(
                 binanceWebSocketProvider.StartWebSocketAsync(),
-                //bybitWebSocketProvider.StartWebSocketAsync(),
-                kucoinWebSocketProvider.StartWebSocketAsync()
-                //bitgetWebSocketProvider.StartWebSocketAsync()
+                bybitWebSocketProvider.StartWebSocketAsync(),
+                kucoinWebSocketProvider.StartWebSocketAsync(),
+                bitgetWebSocketProvider.StartWebSocketAsync()
                 );
-            await Task.Delay(5000);
         }
 
         private void OnBinancePriceUpdate(decimal price)
         {
-            label3.Invoke((MethodInvoker)(() => label3.Text = $"Binance: {price}"));
+            binancePrice = price;
         }
 
         private void OnKucoinPriceUpdate(decimal price)
         {
-            label3.Invoke((MethodInvoker)(() => label3.Text = $"Kucoin: {price}"));
+            kucoinPrice = price;
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void OnBybitPriceUpdate(decimal price)
         {
-            label3.Text = "";
+            bybitPrice = price;
+        }
+
+        private void OnBitgetPriceUpdate(decimal price)
+        {
+            bitgetPrice = price;
         }
     }
 }

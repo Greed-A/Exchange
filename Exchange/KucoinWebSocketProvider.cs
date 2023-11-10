@@ -1,10 +1,4 @@
-﻿using CryptoExchange.Net.Interfaces;
-using Kucoin.Net.Clients;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Kucoin.Net.Clients;
 
 namespace Exchange
 {
@@ -25,11 +19,6 @@ namespace Exchange
             {
                 OnPriceUpdate?.Invoke(data.Data.Price);
             });
-        }
-
-        public string GetName()
-        {
-            return "Kucoin";
         }
     }
 
