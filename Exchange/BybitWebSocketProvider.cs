@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Exchange
 {
-    internal class BybitWebSocketProvider
+    internal class BybitWebSocketProvider : IExchange
     {
         private readonly BybitSocketClient socketClient;
 

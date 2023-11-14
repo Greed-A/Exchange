@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Exchange
 {
-    internal class BitgetWebSocketProvider
+    internal class BitgetWebSocketProvider : IExchange
     {
         private readonly BitgetSocketClient socketClient;
 

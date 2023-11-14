@@ -2,10 +2,10 @@ namespace Exchange
 {
     public partial class Form1 : Form
     {
-        private BinanceWebSocketProvider binanceWebSocketProvider;
-        private BybitWebSocketProvider bybitWebSocketProvider;
-        private KucoinWebSocketProvider kucoinWebSocketProvider;
-        private BitgetWebSocketProvider bitgetWebSocketProvider;
+        private IExchange binanceWebSocketProvider;
+        private IExchange bybitWebSocketProvider;
+        private IExchange kucoinWebSocketProvider;
+        private IExchange bitgetWebSocketProvider;
 
         private decimal binancePrice;
         private decimal kucoinPrice;
@@ -26,18 +26,7 @@ namespace Exchange
             kucoinWebSocketProvider.OnPriceUpdate += OnKucoinPriceUpdate;
             bitgetWebSocketProvider.OnPriceUpdate += OnBitgetPriceUpdate;
 
-            StartWebSocketUpdates();
             Updating();
-        }
-
-        private async void StartWebSocketUpdates()
-        {
-            await Task.WhenAll(
-                binanceWebSocketProvider.StartWebSocketAsync(),
-                bybitWebSocketProvider.StartWebSocketAsync(),
-                kucoinWebSocketProvider.StartWebSocketAsync(),
-                bitgetWebSocketProvider.StartWebSocketAsync()
-                );
         }
         private void Updating()
         {
